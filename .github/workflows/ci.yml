@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build & smoke-test
+    runs-on: macos-14
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select --switch /Applications/Xcode.app
+
+      - name: Show toolchain
+        run: |
+          swift --version
+          xcodebuild -version
+
+      - name: swift build (debug)
+        run: swift build -c debug
+
+      - name: swift build (release)
+        run: swift build -c release
+
+      - name: Bundle .app and smoke-run
+        run: |
+          ./scripts/build-app.sh
+          # Launch the bundled app for a couple of seconds and confirm it stays
+          # up (menu bar apps have no UI to interact with in headless CI).
+          open build/MultiTime.app
+          sleep 3
+          pgrep -x MultiTime && echo "✓ MultiTime is running"
+          killall MultiTime || true

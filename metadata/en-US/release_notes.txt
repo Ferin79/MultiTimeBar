@@ -1,0 +1,1 @@
+Initial release. Multiple time zones in the menu bar with country flags, day-difference indicators, 12/24-hour formats, Time Travel meeting planner, and Launch at Login — all free.

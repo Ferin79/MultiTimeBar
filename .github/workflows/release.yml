@@ -1,0 +1,129 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"           # e.g. v1.0.0, v1.2.3
+  workflow_dispatch:   # allow manual runs from the Actions tab
+
+permissions:
+  contents: write      # required to create/update GitHub Releases
+
+jobs:
+  release:
+    name: Build and release DMG
+    runs-on: macos-14
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select --switch /Applications/Xcode.app
+
+      - name: Show toolchain
+        run: |
+          swift --version
+          xcodebuild -version
+
+      - name: Install create-dmg
+        run: brew install create-dmg
+
+      - name: Resolve version from tag
+        id: version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/v}" >> "${GITHUB_OUTPUT}"
+          else
+            echo "version=0.0.0-$(git rev-parse --short HEAD)" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Patch build script with tag version
+        run: |
+          sed -i '' "s/^VERSION=.*/VERSION=\"${{ steps.version.outputs.version }}\"/" scripts/build-app.sh
+          sed -i '' "s/^BUILD_NUMBER=.*/BUILD_NUMBER=\"${GITHUB_RUN_NUMBER}\"/" scripts/build-app.sh
+          grep -E "^(VERSION|BUILD_NUMBER)=" scripts/build-app.sh
+
+      - name: Build .app
+        run: ./scripts/build-app.sh
+
+      # ------------------------------------------------------------------
+      # Optional: Developer ID signing + Apple notarization.
+      # These steps only run when the required secrets are configured on
+      # the repository. Without them, the DMG ships ad-hoc-signed and
+      # users must right-click → Open once to bypass Gatekeeper.
+      # ------------------------------------------------------------------
+      - name: Import Developer ID certificate
+        if: env.DEVELOPER_ID_CERT_P12_BASE64 != ''
+        env:
+          DEVELOPER_ID_CERT_P12_BASE64: ${{ secrets.DEVELOPER_ID_CERT_P12_BASE64 }}
+          DEVELOPER_ID_CERT_PASSWORD: ${{ secrets.DEVELOPER_ID_CERT_PASSWORD }}
+          KEYCHAIN_PASSWORD: ci-temp-password
+        run: |
+          KEYCHAIN_PATH="${RUNNER_TEMP}/build.keychain-db"
+          echo "$DEVELOPER_ID_CERT_P12_BASE64" | base64 --decode > "${RUNNER_TEMP}/cert.p12"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "${RUNNER_TEMP}/cert.p12" \
+            -k "$KEYCHAIN_PATH" \
+            -P "$DEVELOPER_ID_CERT_PASSWORD" \
+            -T /usr/bin/codesign
+          security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | tr -d '"')
+          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+            -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH" >/dev/null
+
+      - name: Sign & notarize
+        if: env.DEVELOPER_ID_APPLICATION != ''
+        env:
+          DEVELOPER_ID_APPLICATION: ${{ secrets.DEVELOPER_ID_APPLICATION }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: ./scripts/sign-notarize.sh
+
+      # ------------------------------------------------------------------
+      # DMG packaging + release upload
+      # ------------------------------------------------------------------
+      - name: Build DMG
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: ./scripts/build-dmg.sh
+
+      - name: List artifacts
+        run: ls -lah build/
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: MultiTime-${{ steps.version.outputs.version }}
+          path: |
+            build/MultiTime-*.dmg
+            build/MultiTime-*.dmg.sha256
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: MultiTime ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          body: |
+            ## MultiTime ${{ steps.version.outputs.version }}
+
+            Free, open source, native macOS menu bar app for tracking multiple time zones.
+
+            **Install:** download the `.dmg` below, open it, drag `MultiTime.app` into Applications.
+
+            > First launch, if the app is not notarized: right-click `MultiTime.app` in
+            > Applications → **Open** → **Open** to bypass Gatekeeper. This is a one-time step.
+
+            **Verify integrity:** compare against `MultiTime-${{ steps.version.outputs.version }}.dmg.sha256`.
+
+            Requires macOS 13 Ventura or later.
+          files: |
+            build/MultiTime-*.dmg
+            build/MultiTime-*.dmg.sha256
