@@ -51,7 +51,7 @@ All copy lives under `metadata/`:
 | Primary category | [metadata/primary_category.txt](metadata/primary_category.txt) |
 | Secondary category | [metadata/secondary_category.txt](metadata/secondary_category.txt) |
 
-Replace the `YOUR_GITHUB_USERNAME` placeholder in the three URL files.
+The three URL files already point at [github.com/Ferin79/MultiTimeBar](https://github.com/Ferin79/MultiTimeBar).
 
 ## Screenshots (manual)
 

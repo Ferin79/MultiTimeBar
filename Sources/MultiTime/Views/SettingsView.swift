@@ -52,7 +52,7 @@ struct SettingsView: View {
             Text("Free and open source. Contributions welcome!")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text("github.com/…/MultiTimeInMenuBar")
+            Text("github.com/Ferin79/MultiTimeBar")
                 .font(.caption2)
                 .foregroundStyle(.secondary)
         }

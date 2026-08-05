@@ -26,6 +26,36 @@ if [[ ! -d "${APP_DIR}" ]]; then
     exit 1
 fi
 
+# Detect whether the app has an embedded notarization ticket. Skip the
+# quarantine-bypass README when it does — those users won't see the warning.
+IS_NOTARIZED=0
+if xcrun stapler validate "${APP_DIR}" >/dev/null 2>&1; then
+    IS_NOTARIZED=1
+fi
+
+STAGING=$(mktemp -d)
+trap 'rm -rf "${STAGING}"' EXIT
+cp -R "${APP_DIR}" "${STAGING}/"
+
+if [[ "${IS_NOTARIZED}" == "0" ]]; then
+    cat > "${STAGING}/First-launch instructions.txt" <<'TXT'
+MultiTime is open source and distributed without an Apple Developer
+signature. macOS Gatekeeper will show a scary "cannot verify" warning the
+first time you open it. This is normal — here is how to get past it once:
+
+  1. Drag MultiTime.app into your Applications folder.
+  2. In Finder, right-click MultiTime.app → Open.
+  3. Click "Open" in the confirmation dialog.
+
+macOS will remember this choice, and double-click will work from then on.
+
+Alternative (Terminal):
+  xattr -dr com.apple.quarantine /Applications/MultiTime.app
+
+Full source code: see the GitHub repository this DMG came from.
+TXT
+fi
+
 rm -f "${DMG_PATH}"
 
 if command -v create-dmg >/dev/null 2>&1; then
@@ -41,12 +71,9 @@ if command -v create-dmg >/dev/null 2>&1; then
         --app-drop-link 460 200 \
         --no-internet-enable \
         "${DMG_PATH}" \
-        "${APP_DIR}"
+        "${STAGING}"
 else
     echo "▶ create-dmg not installed — falling back to plain hdiutil image."
-    STAGING=$(mktemp -d)
-    trap 'rm -rf "${STAGING}"' EXIT
-    cp -R "${APP_DIR}" "${STAGING}/"
     ln -s /Applications "${STAGING}/Applications"
     hdiutil create \
         -volname "${APP_NAME} ${VERSION}" \
