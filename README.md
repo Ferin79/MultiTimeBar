@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="images/icon.png" width="140" alt="MultiTime app icon" />
+  <img src="images/icon.png" width="140" alt="MultiTimeBar app icon" />
 </p>
 
-<h1 align="center">MultiTime</h1>
+<h1 align="center">MultiTimeBar</h1>
 
 <p align="center">
   <b>Every time zone in your macOS menu bar.<br/>
@@ -37,7 +37,7 @@
 
 ---
 
-## Why MultiTime?
+## Why MultiTimeBar?
 
 If you work with a distributed team, coordinate with family abroad, watch global markets, or plan cross-continental meetings, you already know the pain:
 
@@ -47,7 +47,7 @@ If you work with a distributed team, coordinate with family abroad, watch global
 
 Every menu bar clock app on the Mac App Store either **charges a monthly subscription for basics** or **locks the useful features (multiple clocks, meeting planner, layout options) behind a "Pro" paywall**.
 
-**MultiTime does all of it for free, forever, and never phones home.** No sign-in. No trial. No "upgrade to Pro" nag. No analytics. No ads. No dark patterns. Just a fast, native SwiftUI app that lives in your menu bar and works exactly the way you'd expect.
+**MultiTimeBar does all of it for free, forever, and never phones home.** No sign-in. No trial. No "upgrade to Pro" nag. No analytics. No ads. No dark patterns. Just a fast, native SwiftUI app that lives in your menu bar and works exactly the way you'd expect.
 
 ## Features
 
@@ -63,14 +63,14 @@ Everything is free. Everything is unlocked. Everything is on-device.
 - ↕️ **Reorder, rename, remove** — Drag to reorder in Settings, pencil to rename, red X to delete.
 - 🚀 **Launch at login** — Native `SMAppService` integration (macOS 13+), on by default.
 - 🖤 **Dark mode and light mode** — Automatically follows your system appearance.
-- 🔒 **Zero telemetry** — MultiTime does not make a single network request. Ever. Verified in [PRIVACY.md](PRIVACY.md).
+- 🔒 **Zero telemetry** — MultiTimeBar does not make a single network request. Ever. Verified in [PRIVACY.md](PRIVACY.md).
 - 🧾 **Open source (MIT)** — Read the code. Fork the code. Ship your own build.
 - 🍎 **100% native Swift + SwiftUI** — Fast. Small. Idiomatic. No Electron.
 
 ## Screenshots
 
 <p align="center">
-  <img src="images/menu-bar.png" alt="MultiTime showing Halifax, San Francisco, Paris, Bangalore, and Sydney in the macOS menu bar with country flags and day differences" width="800" />
+  <img src="images/menu-bar.png" alt="MultiTimeBar showing Halifax, San Francisco, Paris, Bangalore, and Sydney in the macOS menu bar with country flags and day differences" width="800" />
 </p>
 
 <p align="center">
@@ -78,7 +78,7 @@ Everything is free. Everything is unlocked. Everything is on-device.
 </p>
 
 <p align="center">
-  <img src="images/menu-bar+dropdown.png" alt="MultiTime menu bar dropdown showing five world clocks with country flags, dates, and day-difference indicators" width="600" />
+  <img src="images/menu-bar+dropdown.png" alt="MultiTimeBar menu bar dropdown showing five world clocks with country flags, dates, and day-difference indicators" width="600" />
 </p>
 
 <p align="center">
@@ -86,7 +86,7 @@ Everything is free. Everything is unlocked. Everything is on-device.
 </p>
 
 <p align="center">
-  <img src="images/Settings.png" alt="MultiTime Settings window with Display, Layout, and General preferences on the left and city search plus clock list on the right" width="800" />
+  <img src="images/Settings.png" alt="MultiTimeBar Settings window with Display, Layout, and General preferences on the left and city search plus clock list on the right" width="800" />
 </p>
 
 <p align="center">
@@ -94,7 +94,7 @@ Everything is free. Everything is unlocked. Everything is on-device.
 </p>
 
 <p align="center">
-  <img src="images/TimeTravel.png" alt="MultiTime Time Travel planner window with a slider to shift the reference time across all clocks" width="600" />
+  <img src="images/TimeTravel.png" alt="MultiTimeBar Time Travel planner window with a slider to shift the reference time across all clocks" width="600" />
 </p>
 
 <p align="center">
@@ -107,17 +107,17 @@ Everything is free. Everything is unlocked. Everything is on-device.
 
 Grab the latest release from the [Releases page](../../releases/latest) and open the `.dmg`.
 
-**2. Drag `MultiTime.app` to your Applications folder**
+**2. Drag `MultiTimeBar.app` to your Applications folder**
 
 **3. Launch it**
 
 The clock strip appears in your menu bar instantly. Click it to open the popover; click **Settings…** to add your first city.
 
-> **First launch tip:** because we don't require users to pay for Apple's notarization ($99/yr), macOS will show a "cannot verify" warning the first time. Right-click `MultiTime.app` in Applications → **Open** → **Open**. macOS remembers the choice. That's it — one-time. Or, in Terminal: `xattr -dr com.apple.quarantine /Applications/MultiTime.app`.
+> **First launch tip:** because we don't require users to pay for Apple's notarization ($99/yr), macOS will show a "cannot verify" warning the first time. Right-click `MultiTimeBar.app` in Applications → **Open** → **Open**. macOS remembers the choice. That's it — one-time. Or, in Terminal: `xattr -dr com.apple.quarantine /Applications/MultiTimeBar.app`.
 
 ## vs. paid alternatives
 
-| Feature | **MultiTime** (this app) | MultiTime — Menu Bar Time Zones | Other paid menu bar clocks |
+| Feature | **MultiTimeBar** (this app) | MultiTime — Menu Bar Time Zones | Other paid menu bar clocks |
 |---|---|---|---|
 | Multiple time zones | ✅ **Unlimited** | 🔒 1 free, more paid | 🔒 Usually paywalled |
 | Country flags | ✅ Free | ✅ | 🔒 Often paid |
@@ -143,13 +143,13 @@ The clock strip appears in your menu bar instantly. Click it to open the popover
 
 ### Recommended: DMG from GitHub Releases
 
-1. Download `MultiTime-<version>.dmg` from the [latest release](../../releases/latest).
-2. Open the DMG, drag `MultiTime.app` into `/Applications`.
-3. Right-click `MultiTime.app` → **Open** the first time (see the [first-launch note above](#quick-start)).
+1. Download `MultiTimeBar-<version>.dmg` from the [latest release](../../releases/latest).
+2. Open the DMG, drag `MultiTimeBar.app` into `/Applications`.
+3. Right-click `MultiTimeBar.app` → **Open** the first time (see the [first-launch note above](#quick-start)).
 
 ### Build from source
 
-MultiTime is a Swift Package. You have three options:
+MultiTimeBar is a Swift Package. You have three options:
 
 **a) One command**
 
@@ -159,7 +159,7 @@ cd MultiTimeBar
 ./scripts/build-app.sh --run
 ```
 
-That's it — a signed `.app` bundle is written to `build/MultiTime.app` and launched.
+That's it — a signed `.app` bundle is written to `build/MultiTimeBar.app` and launched.
 
 **b) Open in Xcode**
 
@@ -167,26 +167,26 @@ That's it — a signed `.app` bundle is written to `build/MultiTime.app` and lau
 open Package.swift
 ```
 
-Xcode 15+ opens `Package.swift` natively. Pick the `MultiTime` scheme and press ⌘R.
+Xcode 15+ opens `Package.swift` natively. Pick the `MultiTimeBar` scheme and press ⌘R.
 
 **c) Plain SwiftPM**
 
 ```sh
-swift run -c release MultiTime
+swift run -c release MultiTimeBar
 ```
 
 Useful for quick iteration; note that this runs the raw executable (not a `.app` bundle), so `SMAppService` and code-signing features will be limited.
 
 ## Privacy
 
-MultiTime does **not**:
+MultiTimeBar does **not**:
 
 - Make network requests.
 - Collect analytics, crash reports, or usage data.
 - Contact any server operated by us or by a third party.
 - Include any advertising or tracking SDKs.
 
-MultiTime **does**:
+MultiTimeBar **does**:
 
 - Store the clocks you add and the settings you configure in the standard `UserDefaults` container for the app, on your Mac only.
 
@@ -201,7 +201,7 @@ Native SwiftUI throughout, built for macOS 13+. A few implementation highlights:
 - **`SMAppService.mainApp`** handles Launch at Login on macOS 13+ — no legacy helper-tool workarounds.
 - **`UserDefaults` + `Codable`** for storage. Zero external dependencies. Small binary, fast launch.
 
-Full project layout in [APP_STORE.md](APP_STORE.md#project-layout) and inline in [Sources/MultiTime](Sources/MultiTime).
+Full project layout in [APP_STORE.md](APP_STORE.md#project-layout) and inline in [Sources/MultiTimeBar](Sources/MultiTimeBar).
 
 ## Distribution & CI
 
@@ -209,7 +209,7 @@ Every push of a `v*` git tag triggers [.github/workflows/release.yml](.github/wo
 
 1. Builds the `.app` on `macos-14`.
 2. Signs it (Developer ID + Apple notarization when the six signing secrets are configured, ad-hoc otherwise).
-3. Packages `MultiTime-<version>.dmg` via [scripts/build-dmg.sh](scripts/build-dmg.sh), including a "First-launch instructions.txt" so first-time users aren't confused by Gatekeeper.
+3. Packages `MultiTimeBar-<version>.dmg` via [scripts/build-dmg.sh](scripts/build-dmg.sh), including a "First-launch instructions.txt" so first-time users aren't confused by Gatekeeper.
 4. Publishes a GitHub Release with the DMG and a SHA-256 checksum attached.
 
 ```sh
@@ -231,7 +231,7 @@ Contributions welcome — pick one and open a PR.
 
 ## Contributing
 
-MultiTime is a community project.
+MultiTimeBar is a community project.
 
 1. Fork the repo.
 2. `./scripts/build-app.sh --run` to make sure the app builds cleanly on your Mac.
@@ -242,19 +242,19 @@ Bug reports and feature ideas: use the [Issues tab](../../issues).
 
 ## FAQ
 
-### Is MultiTime really free? Are you going to add a paywall later?
+### Is MultiTimeBar really free? Are you going to add a paywall later?
 
 Yes. And no. Every feature is free forever, with no in-app purchase, no subscription, no upgrade prompts. The MIT license makes that legally binding — even if this repository stopped being maintained tomorrow, existing users would still have a permanent free copy, and anyone could fork it.
 
-### How is MultiTime different from paid menu bar time zone apps like *MultiTime — Menu Bar Time Zones*?
+### How is MultiTimeBar different from paid menu bar time zone apps like *MultiTime — Menu Bar Time Zones*?
 
-MultiTime is a **completely free, open source alternative** to paid multi-timezone menu bar apps. Features that are typically "Pro" (like stacking clocks in two rows and the Time Travel meeting planner) are unlocked from the start. There is no free/paid tier — everything is included.
+MultiTimeBar is a **completely free, open source alternative** to paid multi-timezone menu bar apps. Features that are typically "Pro" (like stacking clocks in two rows and the Time Travel meeting planner) are unlocked from the start. There is no free/paid tier — everything is included.
 
-### Does MultiTime collect any personal data or telemetry?
+### Does MultiTimeBar collect any personal data or telemetry?
 
 No. Zero. There is no network code in the app. Read [PRIVACY.md](PRIVACY.md), then verify by inspecting the source.
 
-### Which Macs does MultiTime support?
+### Which Macs does MultiTimeBar support?
 
 Any Mac running macOS 13 Ventura or later — Ventura, Sonoma, Sequoia, and newer. Universal 2 binary, so it runs natively on both Apple Silicon (M1, M2, M3, M4) and Intel Macs.
 
@@ -262,21 +262,21 @@ Any Mac running macOS 13 Ventura or later — Ventura, Sonoma, Sequoia, and newe
 
 Unlimited. Add one, add fifty. The menu bar strip scrolls out of view once you run out of horizontal space; use the "Stack in two rows" toggle in Settings to double your capacity on notched MacBooks.
 
-### Can MultiTime help me schedule meetings across time zones?
+### Can MultiTimeBar help me schedule meetings across time zones?
 
 Yes — that's exactly what the **Time Travel Planner** is for. Open the planner from the menu bar popover, enable "Time Travel", and drag the slider. Every clock in your list updates in real time so you can see when a proposed meeting time falls in Seoul, San Francisco, Paris, and everywhere else at once.
 
 ### What time zones and cities are supported?
 
-MultiTime ships with ~150 major cities across every continent, mapped to the standard IANA time zone database. Anything with an IANA identifier (like `Europe/Berlin` or `Pacific/Auckland`) works. Missing your city? Open an issue or add a line to `Sources/MultiTime/Models/TimezoneDatabase.swift`.
+MultiTimeBar ships with ~150 major cities across every continent, mapped to the standard IANA time zone database. Anything with an IANA identifier (like `Europe/Berlin` or `Pacific/Auckland`) works. Missing your city? Open an issue or add a line to `Sources/MultiTimeBar/Models/TimezoneDatabase.swift`.
 
 ### Does daylight saving time work correctly?
 
-Yes. MultiTime uses Foundation's `TimeZone` and `Calendar`, which are backed by the OS's IANA `tz` database. DST transitions are handled automatically — including in edge cases like Australian summer time and the various one-off shifts.
+Yes. MultiTimeBar uses Foundation's `TimeZone` and `Calendar`, which are backed by the OS's IANA `tz` database. DST transitions are handled automatically — including in edge cases like Australian summer time and the various one-off shifts.
 
-### Why does macOS show "Apple could not verify MultiTime is free of malware" on first launch?
+### Why does macOS show "Apple could not verify MultiTimeBar is free of malware" on first launch?
 
-Because notarization requires a paid Apple Developer subscription. MultiTime is free open source software; we don't want to force everyone to pay $99/yr just so you can double-click. Bypass the warning once (right-click → Open, or `xattr -dr com.apple.quarantine /Applications/MultiTime.app`) and macOS remembers your choice. If you'd like to remove the warning permanently, fork the repo, add the six signing secrets described in the release workflow, and ship your own notarized build.
+Because notarization requires a paid Apple Developer subscription. MultiTimeBar is free open source software; we don't want to force everyone to pay $99/yr just so you can double-click. Bypass the warning once (right-click → Open, or `xattr -dr com.apple.quarantine /Applications/MultiTimeBar.app`) and macOS remembers your choice. If you'd like to remove the warning permanently, fork the repo, add the six signing secrets described in the release workflow, and ship your own notarized build.
 
 ### Can I use this at work?
 
@@ -288,14 +288,14 @@ Yes — MIT license. Commercial, corporate, personal, whatever. Use it, ship it,
 
 ## License
 
-[MIT](LICENSE). Copyright © 2026 MultiTime contributors.
+[MIT](LICENSE). Copyright © 2026 MultiTimeBar contributors.
 
 Do whatever you want with it. Attribution appreciated but not required.
 
 ---
 
 <p align="center">
-  <em>Built by the open source community. If MultiTime saves you from booking a 3am meeting, <a href="../../">star the repo</a> so more people can find it.</em>
+  <em>Built by the open source community. If MultiTimeBar saves you from booking a 3am meeting, <a href="../../">star the repo</a> so more people can find it.</em>
 </p>
 
 <!--

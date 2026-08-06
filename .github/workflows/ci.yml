@@ -35,7 +35,7 @@ jobs:
           ./scripts/build-app.sh
           # Launch the bundled app for a couple of seconds and confirm it stays
           # up (menu bar apps have no UI to interact with in headless CI).
-          open build/MultiTime.app
+          open build/MultiTimeBar.app
           sleep 3
-          pgrep -x MultiTime && echo "✓ MultiTime is running"
-          killall MultiTime || true
+          pgrep -x MultiTimeBar && echo "✓ MultiTimeBar is running"
+          killall MultiTimeBar || true

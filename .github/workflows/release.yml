@@ -97,62 +97,62 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: MultiTime-${{ steps.version.outputs.version }}
+          name: MultiTimeBar-${{ steps.version.outputs.version }}
           path: |
-            build/MultiTime-*.dmg
-            build/MultiTime-*.dmg.sha256
+            build/MultiTimeBar-*.dmg
+            build/MultiTimeBar-*.dmg.sha256
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          name: MultiTime ${{ steps.version.outputs.version }}
+          name: MultiTimeBar ${{ steps.version.outputs.version }}
           tag_name: ${{ github.ref_name }}
           draft: false
           prerelease: false
           generate_release_notes: true
           body: |
-            ## MultiTime ${{ steps.version.outputs.version }}
+            ## MultiTimeBar ${{ steps.version.outputs.version }}
 
             Free, open source, native macOS menu bar app for tracking multiple time zones.
             Requires macOS 13 Ventura or later.
 
             ### Install
 
-            1. Download `MultiTime-${{ steps.version.outputs.version }}.dmg` below.
-            2. Open the DMG and drag `MultiTime.app` into your **Applications** folder.
+            1. Download `MultiTimeBar-${{ steps.version.outputs.version }}.dmg` below.
+            2. Open the DMG and drag `MultiTimeBar.app` into your **Applications** folder.
 
             ### First launch (⚠️ important)
 
             Because this build is not notarized by Apple, macOS will show a
-            "cannot verify that MultiTime is free of malware" warning the first
+            "cannot verify that MultiTimeBar is free of malware" warning the first
             time you open it. This is expected for open source apps distributed
             without a paid Apple Developer certificate.
 
             To open the app the first time, choose **one** of the following:
 
             **Right-click → Open** (recommended)
-            > In `/Applications`, right-click (or Control-click) `MultiTime.app`
+            > In `/Applications`, right-click (or Control-click) `MultiTimeBar.app`
             > → **Open** → click **Open** in the dialog. macOS remembers the
             > choice; from then on double-click works normally.
 
             **System Settings**
             > After the warning appears, open **System Settings → Privacy & Security**
-            > → click **Open Anyway** next to the MultiTime entry.
+            > → click **Open Anyway** next to the MultiTimeBar entry.
 
             **Terminal**
             > ```sh
-            > xattr -dr com.apple.quarantine /Applications/MultiTime.app
+            > xattr -dr com.apple.quarantine /Applications/MultiTimeBar.app
             > ```
 
             ### Verify integrity
 
-            Compare `MultiTime-${{ steps.version.outputs.version }}.dmg.sha256`
+            Compare `MultiTimeBar-${{ steps.version.outputs.version }}.dmg.sha256`
             against the DMG:
 
             ```sh
-            shasum -a 256 MultiTime-${{ steps.version.outputs.version }}.dmg
+            shasum -a 256 MultiTimeBar-${{ steps.version.outputs.version }}.dmg
             ```
           files: |
-            build/MultiTime-*.dmg
-            build/MultiTime-*.dmg.sha256
+            build/MultiTimeBar-*.dmg
+            build/MultiTimeBar-*.dmg.sha256

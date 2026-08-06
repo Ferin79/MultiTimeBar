@@ -1,6 +1,6 @@
-MultiTime is the fastest way to see the time in every city that matters to you — right from the macOS menu bar.
+MultiTimeBar is the fastest way to see the time in every city that matters to you — right from the macOS menu bar.
 
-Whether you work with a distributed team, coordinate with family abroad, or just enjoy following markets in different regions, MultiTime keeps every clock a glance away. Add as many time zones as you like. No paywalls, no accounts, no ads.
+Whether you work with a distributed team, coordinate with family abroad, or just enjoy following markets in different regions, MultiTimeBar keeps every clock a glance away. Add as many time zones as you like. No paywalls, no accounts, no ads.
 
 WHY MULTITIME
 • Every feature is free, always. No "Pro" upsell.
@@ -21,7 +21,7 @@ FEATURES
 • All settings and data stored locally in UserDefaults
 
 PRIVACY
-MultiTime does not connect to the internet, collect analytics, or transmit any information whatsoever. All configuration is stored on your Mac. See the source code on GitHub to verify for yourself.
+MultiTimeBar does not connect to the internet, collect analytics, or transmit any information whatsoever. All configuration is stored on your Mac. See the source code on GitHub to verify for yourself.
 
 DESIGNED FOR MODERN macOS
 Native SwiftUI throughout, built for macOS 13 Ventura and later. Automatically adopts light and dark appearance, respects Reduce Motion, and works seamlessly with notched MacBooks.

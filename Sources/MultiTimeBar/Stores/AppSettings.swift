@@ -88,7 +88,7 @@ final class AppSettings: ObservableObject {
                 }
             }
         } catch {
-            NSLog("MultiTime: failed to update login item registration: \(error.localizedDescription)")
+            NSLog("MultiTimeBar: failed to update login item registration: \(error.localizedDescription)")
         }
     }
 }

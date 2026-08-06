@@ -1,6 +1,6 @@
 #!/usr/bin/env swift
 //
-// Procedurally generates the MultiTime app icon at every size the Mac App
+// Procedurally generates the MultiTimeBar app icon at every size the Mac App
 // Store requires, then assembles them into an .icns bundle.
 //
 // Output:

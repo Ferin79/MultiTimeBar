@@ -13,7 +13,7 @@
 #   APPLE_TEAM_ID              10-char Apple team ID.
 #
 # Usage:
-#   scripts/sign-notarize.sh   # signs build/MultiTime.app in place, notarizes,
+#   scripts/sign-notarize.sh   # signs build/MultiTimeBar.app in place, notarizes,
 #                              # then staples the ticket to the bundle.
 
 set -euo pipefail
@@ -25,7 +25,7 @@ cd "$(dirname "$0")/.."
 : "${APPLE_ID_PASSWORD:?Set APPLE_ID_PASSWORD (app-specific password)}"
 : "${APPLE_TEAM_ID:?Set APPLE_TEAM_ID}"
 
-APP_NAME="MultiTime"
+APP_NAME="MultiTimeBar"
 BUILD_DIR="build"
 APP_DIR="${BUILD_DIR}/${APP_NAME}.app"
 
@@ -37,7 +37,7 @@ fi
 echo "▶ Re-signing with Developer ID…"
 codesign --force --deep --timestamp \
     --sign "${DEVELOPER_ID_APPLICATION}" \
-    --entitlements Resources/MultiTime.entitlements \
+    --entitlements Resources/MultiTimeBar.entitlements \
     --options runtime \
     "${APP_DIR}"
 

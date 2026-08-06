@@ -10,9 +10,9 @@ Store Connect or the Apple Developer portal.
 1. **Apple Developer Program membership** ($99/yr) — https://developer.apple.com/programs/
 2. **Team ID** — visible at https://developer.apple.com/account (10-char string).
 3. **App Store Connect app record** — https://appstoreconnect.apple.com
-   - **Bundle ID**: `com.multitime.menubar` (or your own — remember to update
+   - **Bundle ID**: `com.ferin79.multitimebar` (or your own — remember to update
      `BUNDLE_ID` in both `scripts/build-app.sh` and `scripts/archive-appstore.sh`).
-   - **SKU**: `multitime-macos`
+   - **SKU**: `multitimebar-macos`
    - **Primary language**: English (U.S.)
    - **Category**: Productivity (secondary: Utilities)
 4. **Certificates** in Keychain Access:
@@ -25,11 +25,11 @@ Store Connect or the Apple Developer portal.
 
 The build pipeline produces:
 
-- `build/MultiTime.app` — signed, sandboxed application bundle.
+- `build/MultiTimeBar.app` — signed, sandboxed application bundle.
 - `build/icon/AppIcon.icns` — 10-size icon set embedded in the app.
 - `build/icon/AppIcon-1024.png` — 1024×1024 master icon required for the App
   Store listing (upload manually in App Store Connect → App Information).
-- `build/MultiTime.pkg` — signed installer package for upload.
+- `build/MultiTimeBar.pkg` — signed installer package for upload.
 
 ## Metadata (paste into App Store Connect)
 
@@ -72,7 +72,7 @@ this app."** The `PRIVACY.md` file in this repo backs that up and is what the
 
 ## Encryption declaration (manual)
 
-MultiTime does not use encryption. In App Store Connect → Encryption Export
+MultiTimeBar does not use encryption. In App Store Connect → Encryption Export
 Compliance, select **"No, my app does not use encryption."** — this is the
 answer that matches this codebase.
 
@@ -84,13 +84,13 @@ Set the required environment variables and run the archive script:
 export TEAM_ID="ABCDE12345"
 export DIST_APP_IDENTITY="3rd Party Mac Developer Application: Your Name (ABCDE12345)"
 export DIST_INSTALLER_IDENTITY="3rd Party Mac Developer Installer: Your Name (ABCDE12345)"
-export PROVISIONING_PROFILE="$HOME/Library/MobileDevice/Provisioning Profiles/MultiTime.provisionprofile"
+export PROVISIONING_PROFILE="$HOME/Library/MobileDevice/Provisioning Profiles/MultiTimeBar.provisionprofile"
 
 # Optional — enables `--upload`
 export ASC_API_KEY_ID="XXXXXXXXXX"
 export ASC_API_ISSUER_ID="00000000-0000-0000-0000-000000000000"
 
-# Build a signed .pkg into build/MultiTime.pkg
+# Build a signed .pkg into build/MultiTimeBar.pkg
 ./scripts/archive-appstore.sh
 
 # Or build and immediately upload to App Store Connect
@@ -114,7 +114,7 @@ For every submission after the first:
 ## Known reviewer-guideline gotchas for menu bar apps
 
 - App Store review sometimes flags apps whose main UI is only a menu bar item.
-  Explain in the App Review notes that MultiTime is intentionally a
+  Explain in the App Review notes that MultiTimeBar is intentionally a
   **status bar / menu bar utility** and that all functionality is reachable
   from the menu bar icon → click.
 - Because the app has `LSUIElement = YES` and no Dock icon, reviewers will

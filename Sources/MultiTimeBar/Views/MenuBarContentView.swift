@@ -20,7 +20,7 @@ struct MenuBarContentView: View {
 
     private var header: some View {
         HStack {
-            Text("MultiTime")
+            Text("MultiTimeBar")
                 .font(.headline)
             Spacer()
             if timeTravel.isActive {
@@ -86,15 +86,15 @@ struct MenuBarContentView: View {
         VStack(spacing: 2) {
             if settings.showTimeTravel {
                 footerButton(title: "Time Travel Planner…", systemImage: "clock.arrow.2.circlepath") {
-                    NSLog("MultiTime: TimeTravel button pressed")
+                    NSLog("MultiTimeBar: TimeTravel button pressed")
                     AppDelegate.shared?.openTimeTravel()
                 }
             }
             footerButton(title: "Settings…", systemImage: "gearshape") {
-                NSLog("MultiTime: Settings button pressed")
+                NSLog("MultiTimeBar: Settings button pressed")
                 AppDelegate.shared?.openSettings()
             }
-            footerButton(title: "Quit MultiTime", systemImage: "power") {
+            footerButton(title: "Quit MultiTimeBar", systemImage: "power") {
                 NSApp.terminate(nil)
             }
         }

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Sign, package, and (optionally) upload MultiTime to App Store Connect.
+# Sign, package, and (optionally) upload MultiTimeBar to App Store Connect.
 #
 # Prerequisites:
 #   1. Apple Developer Program membership.
@@ -17,14 +17,14 @@
 #                               e.g. "3rd Party Mac Developer Application: You (ABCDE12345)".
 #   DIST_INSTALLER_IDENTITY     Signing identity name for the .pkg,
 #                               e.g. "3rd Party Mac Developer Installer: You (ABCDE12345)".
-#   PROVISIONING_PROFILE        Path to the .provisionprofile for MultiTime.
+#   PROVISIONING_PROFILE        Path to the .provisionprofile for MultiTimeBar.
 #
 # Environment variables (optional):
 #   ASC_API_KEY_ID              App Store Connect API key ID (enables `--upload`).
 #   ASC_API_ISSUER_ID           App Store Connect API issuer ID.
 #
 # Usage:
-#   scripts/archive-appstore.sh              # produce build/MultiTime.pkg
+#   scripts/archive-appstore.sh              # produce build/MultiTimeBar.pkg
 #   scripts/archive-appstore.sh --upload     # produce and upload the .pkg
 
 set -euo pipefail
@@ -36,7 +36,7 @@ cd "$(dirname "$0")/.."
 : "${DIST_INSTALLER_IDENTITY:?Set DIST_INSTALLER_IDENTITY (see script header)}"
 : "${PROVISIONING_PROFILE:?Set PROVISIONING_PROFILE to the .provisionprofile path}"
 
-APP_NAME="MultiTime"
+APP_NAME="MultiTimeBar"
 BUILD_DIR="build"
 APP_DIR="${BUILD_DIR}/${APP_NAME}.app"
 PKG_PATH="${BUILD_DIR}/${APP_NAME}.pkg"
@@ -52,7 +52,7 @@ cp "${PROVISIONING_PROFILE}" "${EMBEDDED_PROFILE}"
 echo "▶ Signing with distribution identity…"
 codesign --force --deep --timestamp \
     --sign "${DIST_APP_IDENTITY}" \
-    --entitlements Resources/MultiTime.entitlements \
+    --entitlements Resources/MultiTimeBar.entitlements \
     --options runtime \
     "${APP_DIR}"
 

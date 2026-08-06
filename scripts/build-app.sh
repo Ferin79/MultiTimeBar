@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Build MultiTime as a proper .app bundle (menu-bar-only, no Dock icon).
+# Build MultiTimeBar as a proper .app bundle (menu-bar-only, no Dock icon).
 #
 # Usage:
-#   scripts/build-app.sh              # release build → ./build/MultiTime.app
+#   scripts/build-app.sh              # release build → ./build/MultiTimeBar.app
 #   scripts/build-app.sh --run        # build then launch
 #
 # For App Store submission, see scripts/archive-appstore.sh instead — it
@@ -14,12 +14,12 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-APP_NAME="MultiTime"
-BUNDLE_ID="com.multitime.menubar"
+APP_NAME="MultiTimeBar"
+BUNDLE_ID="com.ferin79.multitimebar"
 VERSION="1.0.0"
 BUILD_NUMBER="1"
 CATEGORY="public.app-category.productivity"
-COPYRIGHT="© 2026 MultiTime contributors. Released under the MIT License."
+COPYRIGHT="© 2026 MultiTimeBar contributors. Released under the MIT License."
 BUILD_DIR="build"
 APP_DIR="${BUILD_DIR}/${APP_NAME}.app"
 CONTENTS_DIR="${APP_DIR}/Contents"
@@ -101,7 +101,7 @@ PLIST
 echo "▶ Ad-hoc signing…"
 codesign --force --deep \
     --sign - \
-    --entitlements Resources/MultiTime.entitlements \
+    --entitlements Resources/MultiTimeBar.entitlements \
     --options runtime \
     "${APP_DIR}"
 

@@ -2,17 +2,17 @@
 import PackageDescription
 
 let package = Package(
-    name: "MultiTime",
+    name: "MultiTimeBar",
     platforms: [
         .macOS(.v13)
     ],
     products: [
-        .executable(name: "MultiTime", targets: ["MultiTime"])
+        .executable(name: "MultiTimeBar", targets: ["MultiTimeBar"])
     ],
     targets: [
         .executableTarget(
-            name: "MultiTime",
-            path: "Sources/MultiTime"
+            name: "MultiTimeBar",
+            path: "Sources/MultiTimeBar"
         )
     ]
 )

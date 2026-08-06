@@ -37,7 +37,7 @@ struct SettingsView: View {
                 .frame(width: 28, height: 28)
                 .foregroundStyle(.tint)
             VStack(alignment: .leading, spacing: 1) {
-                Text("MultiTime")
+                Text("MultiTimeBar")
                     .font(.headline)
                 Text("Version \(Bundle.main.appVersion)")
                     .font(.caption)

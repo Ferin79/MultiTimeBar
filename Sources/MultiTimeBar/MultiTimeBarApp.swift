@@ -2,7 +2,7 @@ import SwiftUI
 import AppKit
 
 @main
-struct MultiTimeApp: App {
+struct MultiTimeBarApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
@@ -41,7 +41,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     }
 
     func openSettings() {
-        NSLog("MultiTime: openSettings tapped")
+        NSLog("MultiTimeBar: openSettings tapped")
         NSApp.activate(ignoringOtherApps: true)
         if let window = settingsWindow {
             window.makeKeyAndOrderFront(nil)
@@ -57,7 +57,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     }
 
     func openTimeTravel() {
-        NSLog("MultiTime: openTimeTravel tapped")
+        NSLog("MultiTimeBar: openTimeTravel tapped")
         NSApp.activate(ignoringOtherApps: true)
         if let window = timeTravelWindow {
             window.makeKeyAndOrderFront(nil)
