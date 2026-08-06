@@ -31,6 +31,62 @@ echo "▶ Generating app icon…"
 mkdir -p "${ICON_DIR}"
 swift scripts/generate-icon.swift "${ICON_DIR}" >/dev/null
 
+echo "▶ Building asset catalog (required for App Store)…"
+XCASSETS_DIR="${BUILD_DIR}/Assets.xcassets"
+APPICONSET_DIR="${XCASSETS_DIR}/AppIcon.appiconset"
+rm -rf "${XCASSETS_DIR}"
+mkdir -p "${APPICONSET_DIR}"
+
+# Copy the icon PNGs that generate-icon.swift already produced.
+cp "${ICON_DIR}/AppIcon.iconset"/icon_*.png "${APPICONSET_DIR}/"
+
+cat > "${APPICONSET_DIR}/Contents.json" <<'JSON'
+{
+  "images" : [
+    { "size" : "16x16",   "idiom" : "mac", "filename" : "icon_16x16.png",     "scale" : "1x" },
+    { "size" : "16x16",   "idiom" : "mac", "filename" : "icon_16x16@2x.png",  "scale" : "2x" },
+    { "size" : "32x32",   "idiom" : "mac", "filename" : "icon_32x32.png",     "scale" : "1x" },
+    { "size" : "32x32",   "idiom" : "mac", "filename" : "icon_32x32@2x.png",  "scale" : "2x" },
+    { "size" : "128x128", "idiom" : "mac", "filename" : "icon_128x128.png",   "scale" : "1x" },
+    { "size" : "128x128", "idiom" : "mac", "filename" : "icon_128x128@2x.png","scale" : "2x" },
+    { "size" : "256x256", "idiom" : "mac", "filename" : "icon_256x256.png",   "scale" : "1x" },
+    { "size" : "256x256", "idiom" : "mac", "filename" : "icon_256x256@2x.png","scale" : "2x" },
+    { "size" : "512x512", "idiom" : "mac", "filename" : "icon_512x512.png",   "scale" : "1x" },
+    { "size" : "512x512", "idiom" : "mac", "filename" : "icon_512x512@2x.png","scale" : "2x" }
+  ],
+  "info" : { "version" : 1, "author" : "xcode" }
+}
+JSON
+
+cat > "${XCASSETS_DIR}/Contents.json" <<'JSON'
+{ "info" : { "version" : 1, "author" : "xcode" } }
+JSON
+
+CAR_OUT="${BUILD_DIR}/actool-out"
+rm -rf "${CAR_OUT}"
+mkdir -p "${CAR_OUT}"
+
+# Prefer the developer-selected actool; fall back to Xcode.app if command-line
+# tools are still the active selection.
+ACTOOL="$(xcrun --find actool 2>/dev/null || true)"
+if [[ -z "${ACTOOL}" && -x /Applications/Xcode.app/Contents/Developer/usr/bin/actool ]]; then
+    ACTOOL=/Applications/Xcode.app/Contents/Developer/usr/bin/actool
+fi
+if [[ -z "${ACTOOL}" ]]; then
+    echo "✗ Cannot find actool. Install Xcode.app or run: sudo xcode-select --switch /Applications/Xcode.app"
+    exit 1
+fi
+
+"${ACTOOL}" \
+    --compile "${CAR_OUT}" \
+    --platform macosx \
+    --minimum-deployment-target 13.0 \
+    --app-icon AppIcon \
+    --output-partial-info-plist "${BUILD_DIR}/actool-partial.plist" \
+    --enable-on-demand-resources NO \
+    --development-region en \
+    "${XCASSETS_DIR}" >/dev/null
+
 echo "▶ Compiling (release)…"
 swift build -c release >/dev/null
 
@@ -47,6 +103,7 @@ rm -rf "${APP_DIR}"
 mkdir -p "${MACOS_DIR}" "${RESOURCES_DIR}"
 cp "${EXECUTABLE}" "${MACOS_DIR}/${APP_NAME}"
 cp "${ICON_DIR}/AppIcon.icns" "${RESOURCES_DIR}/AppIcon.icns"
+cp "${CAR_OUT}/Assets.car" "${RESOURCES_DIR}/Assets.car"
 
 cat > "${CONTENTS_DIR}/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -98,6 +155,9 @@ PLIST
 
 # Ad-hoc sign with sandbox entitlements so the local dev build behaves like the
 # App Store build. Use scripts/archive-appstore.sh for real distribution.
+echo "▶ Stripping quarantine attributes…"
+xattr -cr "${APP_DIR}"
+
 echo "▶ Ad-hoc signing…"
 codesign --force --deep \
     --sign - \

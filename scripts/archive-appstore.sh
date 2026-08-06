@@ -45,8 +45,10 @@ EMBEDDED_PROFILE="${APP_DIR}/Contents/embedded.provisionprofile"
 # 1) Build the app (this regenerates the icon and Info.plist).
 ./scripts/build-app.sh
 
-# 2) Embed the provisioning profile.
+# 2) Embed the provisioning profile, then strip the download quarantine
+#    xattr that App Store validation refuses to accept.
 cp "${PROVISIONING_PROFILE}" "${EMBEDDED_PROFILE}"
+xattr -cr "${APP_DIR}"
 
 # 3) Re-sign with the distribution certificate + sandbox entitlements.
 echo "▶ Signing with distribution identity…"
@@ -58,6 +60,8 @@ codesign --force --deep --timestamp \
 
 echo "▶ Verifying signature…"
 codesign --verify --strict --deep --verbose=2 "${APP_DIR}"
+codesign -d --entitlements - --xml "${APP_DIR}" 2>/dev/null | \
+    plutil -convert xml1 -o - - | grep -E "application-identifier|team-identifier|app-sandbox" || true
 spctl --assess --type execute --verbose=4 "${APP_DIR}" || true
 
 # 4) Package as an installer .pkg.
