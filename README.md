@@ -25,8 +25,6 @@
   &nbsp;·&nbsp;
   <a href="#features">Features</a>
   &nbsp;·&nbsp;
-  <a href="#vs-paid-alternatives">Comparison</a>
-  &nbsp;·&nbsp;
   <a href="#faq">FAQ</a>
 </p>
 
@@ -115,24 +113,6 @@ The clock strip appears in your menu bar instantly. Click it to open the popover
 
 > **First launch tip:** because we don't require users to pay for Apple's notarization ($99/yr), macOS will show a "cannot verify" warning the first time. Right-click `MultiTimeBar.app` in Applications → **Open** → **Open**. macOS remembers the choice. That's it — one-time. Or, in Terminal: `xattr -dr com.apple.quarantine /Applications/MultiTimeBar.app`.
 
-## vs. paid alternatives
-
-| Feature | **MultiTimeBar** (this app) | MultiTime — Menu Bar Time Zones | Other paid menu bar clocks |
-|---|---|---|---|
-| Multiple time zones | ✅ **Unlimited** | 🔒 1 free, more paid | 🔒 Usually paywalled |
-| Country flags | ✅ Free | ✅ | 🔒 Often paid |
-| Day difference (`+1d`) | ✅ Free | ✅ | 🔒 Sometimes paid |
-| Stack in two rows | ✅ Free | 🔒 Pro feature | 🔒 Pro feature |
-| Time Travel planner | ✅ Free | 🔒 Pro feature | 🔒 Pro feature |
-| 24-hour format | ✅ Free | ✅ | ✅ |
-| Launch at login | ✅ Free | ✅ | ✅ |
-| Zero telemetry / no analytics | ✅ Verifiable | ❓ | ❓ |
-| Zero network requests | ✅ Verifiable | ❓ | ❓ |
-| Runs on Intel *and* Apple Silicon | ✅ Universal 2 | ✅ | ✅ |
-| Open source | ✅ MIT | ❌ | ❌ |
-| Subscription | **None** | Monthly/yearly | Monthly/yearly |
-| Price | **$0 forever** | Free tier + paid | $$$ |
-
 ## Requirements
 
 - **macOS 13 Ventura** or newer (works on Ventura, Sonoma, Sequoia, and up).
@@ -202,21 +182,6 @@ Native SwiftUI throughout, built for macOS 13+. A few implementation highlights:
 - **`UserDefaults` + `Codable`** for storage. Zero external dependencies. Small binary, fast launch.
 
 Full project layout in [APP_STORE.md](APP_STORE.md#project-layout) and inline in [Sources/MultiTimeBar](Sources/MultiTimeBar).
-
-## Distribution & CI
-
-Every push of a `v*` git tag triggers [.github/workflows/release.yml](.github/workflows/release.yml), which:
-
-1. Builds the `.app` on `macos-14`.
-2. Signs it (Developer ID + Apple notarization when the six signing secrets are configured, ad-hoc otherwise).
-3. Packages `MultiTimeBar-<version>.dmg` via [scripts/build-dmg.sh](scripts/build-dmg.sh), including a "First-launch instructions.txt" so first-time users aren't confused by Gatekeeper.
-4. Publishes a GitHub Release with the DMG and a SHA-256 checksum attached.
-
-```sh
-git tag v1.0.0 && git push origin v1.0.0
-```
-
-Full Mac App Store submission checklist — icon generation, sandbox entitlements, App Store Connect metadata, `xcrun altool` upload — is in [APP_STORE.md](APP_STORE.md).
 
 ## Roadmap
 
