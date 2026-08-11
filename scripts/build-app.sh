@@ -149,6 +149,8 @@ cat > "${CONTENTS_DIR}/Info.plist" <<PLIST
     <false/>
     <key>NSSupportsSuddenTermination</key>
     <false/>
+    <key>NSQuitAlwaysKeepsWindows</key>
+    <false/>
 </dict>
 </plist>
 PLIST

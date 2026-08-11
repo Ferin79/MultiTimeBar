@@ -31,6 +31,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         AppDelegate.shared = self
     }
 
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        // Prevent macOS from restoring windows (e.g. the SwiftUI Settings scene)
+        // when the app is relaunched on login/reboot. This app is menu-bar only
+        // and should never surface a window unless the user explicitly asks.
+        UserDefaults.standard.set(false, forKey: "NSQuitAlwaysKeepsWindows")
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
         statusBarController = StatusBarController(
@@ -38,6 +45,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             clockStore: clockStore,
             timeTravel: timeTravel
         )
+
+        // Close any windows that SwiftUI or state restoration may have opened
+        // during launch (in particular the placeholder Settings scene window).
+        // We defer to the next run loop tick so SwiftUI has finished creating
+        // its scenes before we sweep them away.
+        DispatchQueue.main.async {
+            for window in NSApp.windows where window !== self.settingsWindow && window !== self.timeTravelWindow {
+                window.close()
+            }
+        }
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        // Clicking the app icon (e.g. from Login Items) must not pop a window.
+        return false
+    }
+
+    func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
+        return false
     }
 
     func openSettings() {
