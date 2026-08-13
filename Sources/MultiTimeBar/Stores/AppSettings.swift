@@ -52,7 +52,8 @@ final class AppSettings: ObservableObject {
             Key.showDayDifference: true,
             Key.stackInTwoRows: false,
             Key.showTimeTravel: true,
-            Key.launchAtLogin: true,
+            // Opt-in per Mac App Store guideline 2.4.5(iii): no auto-launch without user consent.
+            Key.launchAtLogin: false,
             Key.hasInitialized: false
         ])
         use24Hour = defaults.bool(forKey: Key.use24Hour)
@@ -63,11 +64,12 @@ final class AppSettings: ObservableObject {
         showTimeTravel = defaults.bool(forKey: Key.showTimeTravel)
         launchAtLogin = defaults.bool(forKey: Key.launchAtLogin)
 
-        // Swift does not trigger `didSet` from initializer assignments, so
-        // reconcile the SMAppService state ourselves on first launch.
+        // Swift does not trigger `didSet` from initializer assignments. Do NOT
+        // register with SMAppService here — per Mac App Store guideline
+        // 2.4.5(iii), the app must not auto-launch without explicit user
+        // consent (i.e. the user toggling "Launch at login" in Settings).
         if !defaults.bool(forKey: Key.hasInitialized) {
             defaults.set(true, forKey: Key.hasInitialized)
-            applyLaunchAtLogin()
         } else {
             // On later launches, keep the toggle in sync with the OS in case
             // the user removed the login item from System Settings.

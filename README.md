@@ -59,7 +59,7 @@ Everything is free. Everything is unlocked. Everything is on-device.
 - 🕐 **Time Travel planner** — Drag a slider to see when a proposed meeting time lands in every zone at once. Perfect for scheduling across three continents.
 - 🔍 **150+ cities searchable** — Type "sing", hit Enter, done. All backed by the IANA `tz` database.
 - ↕️ **Reorder, rename, remove** — Drag to reorder in Settings, pencil to rename, red X to delete.
-- 🚀 **Launch at login** — Native `SMAppService` integration (macOS 13+), on by default.
+- 🚀 **Launch at login** — Optional, opt-in via Settings. Native `SMAppService` integration (macOS 13+).
 - 🖤 **Dark mode and light mode** — Automatically follows your system appearance.
 - 🔒 **Zero telemetry** — MultiTimeBar does not make a single network request. Ever. Verified in [PRIVACY.md](PRIVACY.md).
 - 🧾 **Open source (MIT)** — Read the code. Fork the code. Ship your own build.

@@ -17,7 +17,7 @@ FEATURES
 • Time Travel planner: drag a slider to see when a meeting time lands in every zone
 • City search across major cities and IANA time zones
 • Reorder, rename, and remove clocks with a click
-• Launch at login (via SMAppService)
+• Optional Launch at login (opt-in via Settings, powered by SMAppService)
 • All settings and data stored locally in UserDefaults
 
 PRIVACY

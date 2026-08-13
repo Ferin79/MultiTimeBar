@@ -41,6 +41,7 @@ BUILD_DIR="build"
 APP_DIR="${BUILD_DIR}/${APP_NAME}.app"
 PKG_PATH="${BUILD_DIR}/${APP_NAME}.pkg"
 EMBEDDED_PROFILE="${APP_DIR}/Contents/embedded.provisionprofile"
+ENTITLEMENTS="Resources/MultiTimeBar-AppStore.entitlements"
 
 # 1) Build the app (this regenerates the icon and Info.plist).
 ./scripts/build-app.sh
@@ -54,7 +55,7 @@ xattr -cr "${APP_DIR}"
 echo "▶ Signing with distribution identity…"
 codesign --force --deep --timestamp \
     --sign "${DIST_APP_IDENTITY}" \
-    --entitlements Resources/MultiTimeBar.entitlements \
+    --entitlements "${ENTITLEMENTS}" \
     --options runtime \
     "${APP_DIR}"
 
