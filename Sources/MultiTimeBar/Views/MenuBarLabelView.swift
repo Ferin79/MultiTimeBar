@@ -22,6 +22,7 @@ struct MenuBarLabelView: View {
         if clocks.isEmpty {
             // Fallback icon so the menu bar item is always visible.
             Image(systemName: "clock.badge")
+                .foregroundColor(Color(nsColor: .labelColor))
         } else if settings.stackInTwoRows && clocks.count > 1 {
             let mid = (clocks.count + 1) / 2
             let firstRow = Array(clocks.prefix(mid))
@@ -54,14 +55,16 @@ struct MenuBarLabelView: View {
                 use24Hour: settings.use24Hour,
                 showSeconds: settings.showSeconds
             ))
+            // Explicit label color — SwiftUI's implicit `Color.primary` can
+            // render as clear inside an NSStatusItem hosting view on some
+            // macOS versions, making the time text invisible.
+            .foregroundColor(Color(nsColor: .labelColor))
             if settings.showDayDifference,
                let suffix = TimeFormatting.dayDifferenceSuffix(
                     TimeFormatting.dayDifference(for: clock, at: now)
                ) {
-                // `.secondary` in an NSStatusItem renders nearly invisible against
-                // the menu bar; use a dimmed primary color so it adapts to appearance.
                 Text(suffix)
-                    .foregroundColor(Color.primary.opacity(0.65))
+                    .foregroundColor(Color(nsColor: .labelColor).opacity(0.65))
             }
         }
     }

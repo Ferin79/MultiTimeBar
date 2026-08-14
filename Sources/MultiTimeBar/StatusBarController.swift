@@ -2,39 +2,29 @@ import AppKit
 import SwiftUI
 import Combine
 
-/// `NSHostingView` subclass that lets mouse events fall through to the
-/// underlying `NSStatusItem.button`, so the status item's action still fires
-/// when the SwiftUI content covers the button.
-private final class PassthroughHostingView<Content: View>: NSHostingView<Content> {
-    override func hitTest(_ point: NSPoint) -> NSView? { nil }
-}
-
 /// Owns the `NSStatusItem` and the popover shown when it is clicked.
 ///
-/// We use `NSStatusItem` directly (rather than SwiftUI's `MenuBarExtra`) because
-/// `MenuBarExtra` does not reliably display when the executable is bundled outside
-/// of a full Xcode app target.
+/// The status item's button image is rendered from `MenuBarLabelView` via
+/// `ImageRenderer` on a short refresh cycle. This keeps the button a plain
+/// `NSStatusBarButton` so clicks are dispatched natively through
+/// `target`/`action`, avoiding the SwiftUI-vs-AppKit hit-testing pitfalls that
+/// prevent popover activation when a hosting view is embedded as a subview.
 @MainActor
 final class StatusBarController {
     private let statusItem: NSStatusItem
     private let popover: NSPopover
-    private let hostingView: PassthroughHostingView<AnyView>
+    private let settings: AppSettings
+    private let clockStore: ClockStore
+    private let timeTravel: TimeTravelState
     private var eventMonitor: Any?
     private var cancellables: Set<AnyCancellable> = []
+    private var refreshTimer: Timer?
 
     init(settings: AppSettings, clockStore: ClockStore, timeTravel: TimeTravelState) {
+        self.settings = settings
+        self.clockStore = clockStore
+        self.timeTravel = timeTravel
         self.statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-
-        let labelRoot = MenuBarLabelView()
-            .environmentObject(settings)
-            .environmentObject(clockStore)
-            .environmentObject(timeTravel)
-        self.hostingView = PassthroughHostingView(rootView: AnyView(labelRoot))
-        hostingView.translatesAutoresizingMaskIntoConstraints = false
-        // Let SwiftUI report a real intrinsic size so the status item can match it.
-        if #available(macOS 13.0, *) {
-            hostingView.sizingOptions = [.intrinsicContentSize]
-        }
 
         self.popover = NSPopover()
         popover.behavior = .transient
@@ -47,49 +37,59 @@ final class StatusBarController {
         )
 
         if let button = statusItem.button {
-            // Fallback icon so the status item is always visible before
-            // SwiftUI lays out, and if the hosting view ever measures zero.
+            button.imagePosition = .imageOnly
             button.image = NSImage(
                 systemSymbolName: "clock.badge",
                 accessibilityDescription: "MultiTimeBar"
             )
             button.image?.isTemplate = true
-            button.imagePosition = .imageOnly
-
-            button.addSubview(hostingView)
-            NSLayoutConstraint.activate([
-                hostingView.leadingAnchor.constraint(equalTo: button.leadingAnchor),
-                hostingView.trailingAnchor.constraint(equalTo: button.trailingAnchor),
-                hostingView.centerYAnchor.constraint(equalTo: button.centerYAnchor)
-            ])
             button.target = self
             button.action = #selector(togglePopover(_:))
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
 
-        // Ensure the status item resizes when the label's intrinsic width changes.
-        NotificationCenter.default.publisher(for: NSView.frameDidChangeNotification, object: hostingView)
-            .sink { [weak self] _ in self?.updateStatusItemLength() }
-            .store(in: &cancellables)
-        hostingView.postsFrameChangedNotifications = true
-        updateStatusItemLength()
+        refreshLabel()
+
+        // Refresh the rendered label each second so times tick. The timer runs
+        // on the main run loop; observable stores also trigger a redraw so
+        // toggles in Settings are reflected immediately.
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            Task { @MainActor in self?.refreshLabel() }
+        }
+        refreshTimer?.tolerance = 0.2
+
+        Publishers.MergeMany(
+            settings.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
+            clockStore.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
+            timeTravel.objectWillChange.map { _ in () }.eraseToAnyPublisher()
+        )
+        .receive(on: RunLoop.main)
+        .sink { [weak self] in self?.refreshLabel() }
+        .store(in: &cancellables)
     }
 
-    private func updateStatusItemLength() {
-        let intrinsic = hostingView.intrinsicContentSize
-        let fitting = hostingView.fittingSize
-        let width = max(intrinsic.width, fitting.width)
-        if width > 0 {
-            statusItem.length = width
-            statusItem.button?.image = nil
-        } else {
-            // Fall back to a visible placeholder icon until SwiftUI reports
-            // a real intrinsic size — otherwise the status item is invisible.
-            statusItem.length = NSStatusItem.squareLength
-        }
+    deinit {
+        refreshTimer?.invalidate()
+    }
+
+    private func refreshLabel() {
+        let labelRoot = MenuBarLabelView()
+            .environmentObject(settings)
+            .environmentObject(clockStore)
+            .environmentObject(timeTravel)
+        let renderer = ImageRenderer(content: labelRoot)
+        renderer.scale = NSScreen.main?.backingScaleFactor ?? 2.0
+        // isOpaque = false keeps the transparent status-bar background.
+        renderer.isOpaque = false
+        guard let image = renderer.nsImage else { return }
+        // Color emoji (flags) must be preserved — do not treat as template.
+        image.isTemplate = false
+        statusItem.button?.image = image
+        statusItem.length = max(image.size.width, NSStatusItem.squareLength)
     }
 
     @objc private func togglePopover(_ sender: AnyObject?) {
+        NSLog("MultiTimeBar: togglePopover fired sender=\(String(describing: sender))")
         if popover.isShown {
             closePopover(sender)
         } else {
@@ -98,7 +98,11 @@ final class StatusBarController {
     }
 
     private func openPopover(_ sender: AnyObject?) {
-        guard let button = statusItem.button else { return }
+        guard let button = statusItem.button else {
+            NSLog("MultiTimeBar: openPopover — no button")
+            return
+        }
+        NSLog("MultiTimeBar: openPopover showing")
         // Activating the app first ensures the popover reliably becomes key
         // and renders its content on macOS 14+ / macOS 26.
         NSApp.activate(ignoringOtherApps: true)
