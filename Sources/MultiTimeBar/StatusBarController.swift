@@ -19,6 +19,7 @@ final class StatusBarController {
     private var eventMonitor: Any?
     private var cancellables: Set<AnyCancellable> = []
     private var refreshTimer: Timer?
+    private var appearanceObservation: NSKeyValueObservation?
 
     init(settings: AppSettings, clockStore: ClockStore, timeTravel: TimeTravelState) {
         self.settings = settings
@@ -66,22 +67,45 @@ final class StatusBarController {
         .receive(on: RunLoop.main)
         .sink { [weak self] in self?.refreshLabel() }
         .store(in: &cancellables)
+
+        // Repaint the rendered label when the menu bar's effective appearance
+        // flips (e.g. system Dark Mode toggle), so the text stays legible.
+        if let button = statusItem.button {
+            appearanceObservation = button.observe(\.effectiveAppearance, options: [.new]) { [weak self] _, _ in
+                Task { @MainActor [weak self] in self?.refreshLabel() }
+            }
+        }
     }
 
     deinit {
         refreshTimer?.invalidate()
+        appearanceObservation?.invalidate()
     }
 
     private func refreshLabel() {
+        // Match the label's color scheme to the status button's effective
+        // appearance so `Color(nsColor: .labelColor)` resolves to the right
+        // shade under the current menu bar tint (light wallpaper → black,
+        // dark wallpaper / Dark Mode → white).
+        let appearance = statusItem.button?.effectiveAppearance ?? NSApp.effectiveAppearance
+        let isDark = appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+
         let labelRoot = MenuBarLabelView()
             .environmentObject(settings)
             .environmentObject(clockStore)
             .environmentObject(timeTravel)
+            .environment(\.colorScheme, isDark ? .dark : .light)
         let renderer = ImageRenderer(content: labelRoot)
         renderer.scale = NSScreen.main?.backingScaleFactor ?? 2.0
         // isOpaque = false keeps the transparent status-bar background.
         renderer.isOpaque = false
-        guard let image = renderer.nsImage else { return }
+
+        // Resolve NSColor-backed SwiftUI colors against the correct appearance.
+        var image: NSImage?
+        appearance.performAsCurrentDrawingAppearance {
+            image = renderer.nsImage
+        }
+        guard let image else { return }
         // Color emoji (flags) must be preserved — do not treat as template.
         image.isTemplate = false
         statusItem.button?.image = image
