@@ -88,7 +88,7 @@ fi
     "${XCASSETS_DIR}" >/dev/null
 
 echo "▶ Compiling (release)…"
-swift build -c release >/dev/null
+swift build -c release
 
 BIN_PATH=$(swift build -c release --show-bin-path)
 EXECUTABLE="${BIN_PATH}/${APP_NAME}"
