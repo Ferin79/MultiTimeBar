@@ -54,7 +54,7 @@ final class StatusBarController {
         // on the main run loop; observable stores also trigger a redraw so
         // toggles in Settings are reflected immediately.
         refreshTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            Task { @MainActor in self?.refreshLabel() }
+            Task { @MainActor [weak self] in self?.refreshLabel() }
         }
         refreshTimer?.tolerance = 0.2
 
@@ -111,7 +111,7 @@ final class StatusBarController {
 
         // Dismiss when the user clicks outside the popover.
         eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
-            Task { @MainActor in self?.closePopover(nil) }
+            Task { @MainActor [weak self] in self?.closePopover(nil) }
         }
     }
 
