@@ -46,12 +46,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             timeTravel: timeTravel
         )
 
-        // Close any windows that SwiftUI or state restoration may have opened
-        // during launch (in particular the placeholder Settings scene window).
-        // We defer to the next run loop tick so SwiftUI has finished creating
-        // its scenes before we sweep them away.
+        // Close the SwiftUI Settings placeholder scene window if it was
+        // materialized during launch. Only touch normal titled content
+        // windows — never blindly close `NSApp.windows`, because that set
+        // includes NSStatusItem's private button window, and closing it
+        // silently breaks the status item's click handling.
         DispatchQueue.main.async {
-            for window in NSApp.windows where window !== self.settingsWindow && window !== self.timeTravelWindow {
+            for window in NSApp.windows {
+                guard window !== self.settingsWindow,
+                      window !== self.timeTravelWindow,
+                      window.styleMask.contains(.titled),
+                      window.isVisible else { continue }
                 window.close()
             }
         }
