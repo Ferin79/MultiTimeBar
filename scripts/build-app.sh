@@ -17,7 +17,7 @@ cd "$(dirname "$0")/.."
 APP_NAME="MultiTimeBar"
 BUNDLE_ID="com.ferin79.multitimebar"
 VERSION="1.0.0"
-BUILD_NUMBER="5"
+BUILD_NUMBER="3"
 CATEGORY="public.app-category.productivity"
 COPYRIGHT="© 2026 MultiTimeBar contributors. Released under the MIT License."
 BUILD_DIR="build"
@@ -26,6 +26,12 @@ CONTENTS_DIR="${APP_DIR}/Contents"
 MACOS_DIR="${CONTENTS_DIR}/MacOS"
 RESOURCES_DIR="${CONTENTS_DIR}/Resources"
 ICON_DIR="${BUILD_DIR}/icon"
+
+# Static source files that get copied verbatim (or with a plist-key patch) into
+# the app bundle. Keeping them out of the script means you can edit them with
+# proper syntax highlighting and diff them in review.
+SRC_INFO_PLIST="Resources/Info.plist"
+SRC_XCASSETS="Resources/Assets.xcassets"
 
 echo "▶ Generating app icon…"
 mkdir -p "${ICON_DIR}"
@@ -37,30 +43,11 @@ APPICONSET_DIR="${XCASSETS_DIR}/AppIcon.appiconset"
 rm -rf "${XCASSETS_DIR}"
 mkdir -p "${APPICONSET_DIR}"
 
-# Copy the icon PNGs that generate-icon.swift already produced.
+# Start from the checked-in asset catalog (Contents.json files) and drop in
+# the freshly generated PNGs next to the AppIcon manifest.
+cp "${SRC_XCASSETS}/Contents.json" "${XCASSETS_DIR}/Contents.json"
+cp "${SRC_XCASSETS}/AppIcon.appiconset/Contents.json" "${APPICONSET_DIR}/Contents.json"
 cp "${ICON_DIR}/AppIcon.iconset"/icon_*.png "${APPICONSET_DIR}/"
-
-cat > "${APPICONSET_DIR}/Contents.json" <<'JSON'
-{
-  "images" : [
-    { "size" : "16x16",   "idiom" : "mac", "filename" : "icon_16x16.png",     "scale" : "1x" },
-    { "size" : "16x16",   "idiom" : "mac", "filename" : "icon_16x16@2x.png",  "scale" : "2x" },
-    { "size" : "32x32",   "idiom" : "mac", "filename" : "icon_32x32.png",     "scale" : "1x" },
-    { "size" : "32x32",   "idiom" : "mac", "filename" : "icon_32x32@2x.png",  "scale" : "2x" },
-    { "size" : "128x128", "idiom" : "mac", "filename" : "icon_128x128.png",   "scale" : "1x" },
-    { "size" : "128x128", "idiom" : "mac", "filename" : "icon_128x128@2x.png","scale" : "2x" },
-    { "size" : "256x256", "idiom" : "mac", "filename" : "icon_256x256.png",   "scale" : "1x" },
-    { "size" : "256x256", "idiom" : "mac", "filename" : "icon_256x256@2x.png","scale" : "2x" },
-    { "size" : "512x512", "idiom" : "mac", "filename" : "icon_512x512.png",   "scale" : "1x" },
-    { "size" : "512x512", "idiom" : "mac", "filename" : "icon_512x512@2x.png","scale" : "2x" }
-  ],
-  "info" : { "version" : 1, "author" : "xcode" }
-}
-JSON
-
-cat > "${XCASSETS_DIR}/Contents.json" <<'JSON'
-{ "info" : { "version" : 1, "author" : "xcode" } }
-JSON
 
 CAR_OUT="${BUILD_DIR}/actool-out"
 rm -rf "${CAR_OUT}"
@@ -105,55 +92,19 @@ cp "${EXECUTABLE}" "${MACOS_DIR}/${APP_NAME}"
 cp "${ICON_DIR}/AppIcon.icns" "${RESOURCES_DIR}/AppIcon.icns"
 cp "${CAR_OUT}/Assets.car" "${RESOURCES_DIR}/Assets.car"
 
-cat > "${CONTENTS_DIR}/Info.plist" <<PLIST
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>CFBundleName</key>
-    <string>${APP_NAME}</string>
-    <key>CFBundleDisplayName</key>
-    <string>${APP_NAME}</string>
-    <key>CFBundleIdentifier</key>
-    <string>${BUNDLE_ID}</string>
-    <key>CFBundleExecutable</key>
-    <string>${APP_NAME}</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleShortVersionString</key>
-    <string>${VERSION}</string>
-    <key>CFBundleVersion</key>
-    <string>${BUILD_NUMBER}</string>
-    <key>CFBundleInfoDictionaryVersion</key>
-    <string>6.0</string>
-    <key>CFBundleDevelopmentRegion</key>
-    <string>en</string>
-    <key>CFBundleIconFile</key>
-    <string>AppIcon</string>
-    <key>CFBundleIconName</key>
-    <string>AppIcon</string>
-    <key>LSMinimumSystemVersion</key>
-    <string>13.0</string>
-    <key>LSUIElement</key>
-    <true/>
-    <key>LSApplicationCategoryType</key>
-    <string>${CATEGORY}</string>
-    <key>NSHumanReadableCopyright</key>
-    <string>${COPYRIGHT}</string>
-    <key>NSHighResolutionCapable</key>
-    <true/>
-    <key>NSPrincipalClass</key>
-    <string>NSApplication</string>
-    <key>NSSupportsAutomaticTermination</key>
-    <false/>
-    <key>NSSupportsSuddenTermination</key>
-    <false/>
-    <key>NSQuitAlwaysKeepsWindows</key>
-    <false/>
-</dict>
-</plist>
-PLIST
+# Start from the checked-in Info.plist and patch only the values that change
+# per release (version + build). Bundle id, category, copyright, and static
+# keys are edited in the source file directly.
+cp "${SRC_INFO_PLIST}" "${CONTENTS_DIR}/Info.plist"
+PB=/usr/libexec/PlistBuddy
+"${PB}" -c "Set :CFBundleShortVersionString ${VERSION}" "${CONTENTS_DIR}/Info.plist"
+"${PB}" -c "Set :CFBundleVersion ${BUILD_NUMBER}" "${CONTENTS_DIR}/Info.plist"
+"${PB}" -c "Set :CFBundleName ${APP_NAME}" "${CONTENTS_DIR}/Info.plist"
+"${PB}" -c "Set :CFBundleDisplayName ${APP_NAME}" "${CONTENTS_DIR}/Info.plist"
+"${PB}" -c "Set :CFBundleExecutable ${APP_NAME}" "${CONTENTS_DIR}/Info.plist"
+"${PB}" -c "Set :CFBundleIdentifier ${BUNDLE_ID}" "${CONTENTS_DIR}/Info.plist"
+"${PB}" -c "Set :LSApplicationCategoryType ${CATEGORY}" "${CONTENTS_DIR}/Info.plist"
+"${PB}" -c "Set :NSHumanReadableCopyright ${COPYRIGHT}" "${CONTENTS_DIR}/Info.plist"
 
 # Ad-hoc sign with sandbox entitlements so the local dev build behaves like the
 # App Store build. Use scripts/archive-appstore.sh for real distribution.

@@ -14,3 +14,8 @@ build/
 dist/
 *.app/
 *.dSYM/
+
+## Local secrets / signing config
+.env
+.env.*
+!.env.example
