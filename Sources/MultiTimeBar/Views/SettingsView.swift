@@ -49,7 +49,7 @@ struct SettingsView: View {
 
     private var footer: some View {
         VStack(spacing: 2) {
-            Text("Free and open source. Contributions welcome!")
+            Text("Open source. Contributions welcome!")
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Text("github.com/Ferin79/MultiTimeBar")

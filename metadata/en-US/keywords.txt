@@ -1,1 +1,1 @@
-world clock,time zone,timezone,menu bar,clock,world time,meeting planner,remote work,team,open source,free,menubar
+world clock,time zone,timezone,menu bar,clock,world time,meeting planner,remote work,team,open source,menubar
