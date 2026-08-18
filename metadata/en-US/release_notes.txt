@@ -1,5 +1,13 @@
-Initial release. Multiple time zones in the menu bar with country flags, day-difference indicators, 12/24-hour formats, Time Travel meeting planner, and optional Launch at Login (opt-in via Settings).
+Welcome to MultiTimeBar!
 
-Fixes:
-- Menu bar icon now reliably opens the popover on macOS 14 and later.
-- Time text always renders visibly against the menu bar background.
+This first release brings every time zone that matters to your macOS menu bar:
+- Multiple clocks side-by-side with country flags and live times
+- 12 or 24-hour formats with optional seconds
+- Day-difference indicators (+1d / -1d) so you never book the wrong day
+- Time Travel planner to preview a meeting time across every clock at once
+- Stack clocks in two rows for compact display on notched MacBooks
+- City search across major cities and the IANA time zone database
+- Optional Launch at Login (opt-in via Settings)
+- Fully sandboxed, on-device, zero telemetry
+
+Thanks for installing — feedback and contributions are welcome on GitHub.

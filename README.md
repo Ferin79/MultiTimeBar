@@ -6,7 +6,13 @@
 
 <p align="center">
   <b>Every time zone in your macOS menu bar.<br/>
-  Free. Open source. Every feature unlocked, forever.</b>
+  Now available on the Mac App Store.</b>
+</p>
+
+<p align="center">
+  <a href="https://apps.apple.com/app/multitimebar/id6798462773">
+    <img src="https://tools.applemediaservices.com/api/badges/download-on-the-mac-app-store/black/en-us?size=250x83" alt="Download on the Mac App Store" height="60" />
+  </a>
 </p>
 
 <p align="center">
@@ -14,12 +20,15 @@
   <img alt="macOS 13+" src="https://img.shields.io/badge/macOS-13%2B-black?logo=apple" />
   <img alt="Apple Silicon & Intel" src="https://img.shields.io/badge/arch-Apple%20Silicon%20%7C%20Intel-lightgrey" />
   <img alt="Swift 5.9" src="https://img.shields.io/badge/Swift-5.9-orange?logo=swift" />
-  <a href="https://github.com/Ferin79/MultiTimeBar/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/Ferin79/MultiTimeBar?label=download&color=brightgreen"></a>
+  <a href="https://apps.apple.com/app/multitimebar/id6798462773"><img alt="Mac App Store" src="https://img.shields.io/badge/Mac%20App%20Store-Available-0A84FF?logo=apple"></a>
+  <a href="https://github.com/Ferin79/MultiTimeBar/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/Ferin79/MultiTimeBar?label=github%20release&color=brightgreen"></a>
   <a href="../../actions/workflows/ci.yml"><img alt="CI status" src="../../actions/workflows/ci.yml/badge.svg"></a>
 </p>
 
 <p align="center">
-  <a href="../../releases/latest"><b>⬇️ Download the latest DMG</b></a>
+  <a href="https://apps.apple.com/app/multitimebar/id6798462773"><b>🛍️ Get it on the Mac App Store</b></a>
+  &nbsp;·&nbsp;
+  <a href="../../releases/latest"><b>⬇️ Download the DMG</b></a>
   &nbsp;·&nbsp;
   <a href="#quick-start">Quick start</a>
   &nbsp;·&nbsp;
@@ -101,17 +110,16 @@ Everything is free. Everything is unlocked. Everything is on-device.
 
 ## Quick start
 
-**1. Download the DMG**
+**1. Install**
 
-Grab the latest release from the [Releases page](../../releases/latest) and open the `.dmg`.
+- **Mac App Store (recommended):** [Get MultiTimeBar on the Mac App Store](https://apps.apple.com/app/multitimebar/id6798462773). One click, sandboxed, and updates arrive automatically.
+- **Or via DMG:** grab the latest release from the [Releases page](../../releases/latest), open the `.dmg`, and drag `MultiTimeBar.app` to `/Applications`.
 
-**2. Drag `MultiTimeBar.app` to your Applications folder**
-
-**3. Launch it**
+**2. Launch it**
 
 The clock strip appears in your menu bar instantly. Click it to open the popover; click **Settings…** to add your first city.
 
-> **First launch tip:** because we don't require users to pay for Apple's notarization ($99/yr), macOS will show a "cannot verify" warning the first time. Right-click `MultiTimeBar.app` in Applications → **Open** → **Open**. macOS remembers the choice. That's it — one-time. Or, in Terminal: `xattr -dr com.apple.quarantine /Applications/MultiTimeBar.app`.
+> **DMG first-launch note:** the App Store build is fully notarized, so it launches without any warning. The DMG build from GitHub is only ad-hoc signed, so the first time you open it macOS will show a "cannot verify" dialog. Right-click `MultiTimeBar.app` in Applications → **Open** → **Open**. macOS remembers the choice. Or, in Terminal: `xattr -dr com.apple.quarantine /Applications/MultiTimeBar.app`.
 
 ## Requirements
 
@@ -121,7 +129,19 @@ The clock strip appears in your menu bar instantly. Click it to open the popover
 
 ## Install
 
-### Recommended: DMG from GitHub Releases
+### Recommended: Mac App Store
+
+The fastest way to get MultiTimeBar. Fully notarized, sandboxed, and updated automatically alongside your other App Store apps.
+
+<p align="center">
+  <a href="https://apps.apple.com/app/multitimebar/id6798462773">
+    <img src="https://tools.applemediaservices.com/api/badges/download-on-the-mac-app-store/black/en-us?size=250x83" alt="Download on the Mac App Store" height="60" />
+  </a>
+</p>
+
+### Alternative: DMG from GitHub Releases
+
+Prefer to install outside the App Store, run an older macOS build, or self-host? The DMG is always available.
 
 1. Download `MultiTimeBar-<version>.dmg` from the [latest release](../../releases/latest).
 2. Open the DMG, drag `MultiTimeBar.app` into `/Applications`.
@@ -241,7 +261,9 @@ Yes. MultiTimeBar uses Foundation's `TimeZone` and `Calendar`, which are backed 
 
 ### Why does macOS show "Apple could not verify MultiTimeBar is free of malware" on first launch?
 
-Because notarization requires a paid Apple Developer subscription. MultiTimeBar is free open source software; we don't want to force everyone to pay $99/yr just so you can double-click. Bypass the warning once (right-click → Open, or `xattr -dr com.apple.quarantine /Applications/MultiTimeBar.app`) and macOS remembers your choice. If you'd like to remove the warning permanently, fork the repo, add the six signing secrets described in the release workflow, and ship your own notarized build.
+Only if you install from the DMG. The [Mac App Store build](https://apps.apple.com/app/multitimebar/id6798462773) is fully notarized by Apple and launches without any warning.
+
+The GitHub DMG is ad-hoc signed so anyone can build and ship it from source without paying for a Developer Program subscription. Bypass the warning once (right-click → Open, or `xattr -dr com.apple.quarantine /Applications/MultiTimeBar.app`) and macOS remembers your choice.
 
 ### Can I use this at work?
 
